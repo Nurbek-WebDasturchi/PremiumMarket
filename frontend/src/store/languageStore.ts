@@ -12,7 +12,11 @@ export const useLanguageStore = create<LanguageState>()(
   persist(
     (set, get) => ({
       language: 'uz',
-      setLanguage: (language) => set({ language }),
+      setLanguage: (language) =>
+        set({
+          language,
+          t: (key) => translations[language][key] ?? translations.uz[key]
+        }),
       t: (key) => translations[get().language][key] ?? translations.uz[key]
     }),
     { name: 'premium-marketplace-language' }
