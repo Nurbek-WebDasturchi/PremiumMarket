@@ -134,7 +134,8 @@ npm.cmd run dev
 Ochish kerak bo'lgan linklar:
 
 - Frontend: http://localhost:5173
-- Backend API health check: http://localhost:4000/api/health
+- Backend API health check local: http://localhost:4000/api/health
+- Backend API production: https://premiummarket.onrender.com/api/health
 
 ## Supabase Qiymatlarini Qayerdan Olasiz
 
@@ -159,7 +160,7 @@ SUPABASE_JWT_SECRET=your-supabase-jwt-secret
 Frontend `.env`:
 
 ```text
-VITE_API_URL=http://localhost:4000/api
+VITE_API_URL=https://premiummarket.onrender.com/api
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```

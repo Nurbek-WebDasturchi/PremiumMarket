@@ -63,10 +63,10 @@ Hali Vercel link bo'lmasa, vaqtincha http://localhost:5173 yozib turing.
 Frontend deploy bo'lgandan keyin CLIENT_URL ni Vercel linkiga almashtirasiz.
 Deploy Web Service tugmasini bosing.
 Deploy tugagach, Render sizga backend URL beradi. Masalan:
-https://premium-marketplace-api.onrender.com
+https://premiummarket.onrender.com
 Health check:
 
-https://premium-marketplace-api.onrender.com/api/health
+https://premiummarket.onrender.com/api/health
 Agar shu link JSON qaytarsa, backend ishlayapti.
 
 4. Frontend'ni Vercel'ga Deploy Qilish
@@ -76,12 +76,12 @@ Agar shu link JSON qaytarsa, backend ishlayapti.
    Root directory sifatida quyidagini tanlang:
    frontend
    Environment variables qo'shing:
-   VITE_API_URL=https://your-render-api.onrender.com/api
+   VITE_API_URL=https://premiummarket.onrender.com/api
    VITE_SUPABASE_URL=https://your-project.supabase.co
    VITE_SUPABASE_ANON_KEY=your-anon-key
    Tushuntirish:
 
-VITE_API_URL bu Render backend URL + /api.
+VITE_API_URL bu Render backend URL + /api. Bu project uchun: https://premiummarket.onrender.com/api.
 VITE_SUPABASE_URL Supabase project URL.
 VITE_SUPABASE_ANON_KEY Supabase anon public key.
 Deploy tugmasini bosing.

@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://premiummarket.onrender.com/api';
 
 async function authHeader(): Promise<Record<string, string>> {
   const { data } = await supabase.auth.getSession();
