@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { EmptyState } from '../components/EmptyState';
 import { pageTransition } from '../animations/page';
 import { useCartStore } from '../store/cartStore';
+import { useLanguageStore } from '../store/languageStore';
 import { money } from '../utils/format';
 
 export const Cart = () => {
   const { items, update, remove, total } = useCartStore();
+  const t = useLanguageStore((state) => state.t);
 
-  if (!items.length) return <EmptyState title="Your cart is empty" description="Add products and they will appear here." />;
+  if (!items.length) return <EmptyState title={t('emptyCart')} description={t('emptyCartDesc')} />;
 
   return (
     <motion.div {...pageTransition} className="grid gap-6 lg:grid-cols-[1fr_22rem]">
@@ -31,9 +33,9 @@ export const Cart = () => {
         ))}
       </div>
       <aside className="glass h-fit rounded-xl p-5">
-        <h2 className="text-xl font-black">Order summary</h2>
-        <div className="my-5 flex justify-between text-lg font-black"><span>Total</span><span>{money(total())}</span></div>
-        <Link to="/checkout" className="btn-primary w-full">Checkout</Link>
+        <h2 className="text-xl font-black">{t('orderSummary')}</h2>
+        <div className="my-5 flex justify-between text-lg font-black"><span>{t('total')}</span><span>{money(total())}</span></div>
+        <Link to="/checkout" className="btn-primary w-full">{t('checkout')}</Link>
       </aside>
     </motion.div>
   );

@@ -7,6 +7,7 @@ import { ProductSkeleton } from '../components/Skeleton';
 import { EmptyState } from '../components/EmptyState';
 import { pageTransition } from '../animations/page';
 import { api } from '../services/api';
+import { useLanguageStore } from '../store/languageStore';
 import type { Category, Product } from '../types';
 
 export const Products = () => {
@@ -17,6 +18,7 @@ export const Products = () => {
   const search = params.get('search') ?? '';
   const category = params.get('category') ?? '';
   const sort = params.get('sort') ?? 'newest';
+  const t = useLanguageStore((state) => state.t);
 
   const query = useMemo(() => new URLSearchParams({ search, category, sort, limit: '24' }).toString(), [search, category, sort]);
 
@@ -40,21 +42,21 @@ export const Products = () => {
     <motion.div {...pageTransition}>
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase text-brand-700 dark:text-brand-100">Marketplace</p>
-          <h1 className="text-3xl font-black text-slate-950 dark:text-white">Products</h1>
+          <p className="text-sm font-bold uppercase text-brand-700 dark:text-brand-100">{t('marketplace')}</p>
+          <h1 className="text-3xl font-black text-slate-950 dark:text-white">{t('products')}</h1>
         </div>
         <div className="glass flex flex-wrap items-center gap-3 rounded-xl p-3">
           <SlidersHorizontal className="h-4 w-4 text-brand-600" />
-          <input className="input w-56 py-2" value={search} onChange={(event) => update('search', event.target.value)} placeholder="Search products" />
+          <input className="input w-56 py-2" value={search} onChange={(event) => update('search', event.target.value)} placeholder={t('searchProducts')} />
           <select className="input w-48 py-2" value={category} onChange={(event) => update('category', event.target.value)}>
-            <option value="">All categories</option>
+            <option value="">{t('allCategories')}</option>
             {categories.map((cat) => <option key={cat.id} value={cat.slug}>{cat.name}</option>)}
           </select>
           <select className="input w-40 py-2" value={sort} onChange={(event) => update('sort', event.target.value)}>
-            <option value="newest">Newest</option>
-            <option value="rating">Top rated</option>
-            <option value="price_asc">Price low</option>
-            <option value="price_desc">Price high</option>
+            <option value="newest">{t('newest')}</option>
+            <option value="rating">{t('topRated')}</option>
+            <option value="price_asc">{t('priceLow')}</option>
+            <option value="price_desc">{t('priceHigh')}</option>
           </select>
         </div>
       </div>
@@ -63,7 +65,7 @@ export const Products = () => {
       ) : products.length ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       ) : (
-        <EmptyState title="No products found" description="Try changing your search, category, or sort filters." />
+        <EmptyState title={t('noProducts')} description={t('noProductsDesc')} />
       )}
     </motion.div>
   );

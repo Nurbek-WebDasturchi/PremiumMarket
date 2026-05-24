@@ -3,18 +3,20 @@ import { useEffect, useState } from 'react';
 import { EmptyState } from '../components/EmptyState';
 import { pageTransition } from '../animations/page';
 import { api } from '../services/api';
+import { useLanguageStore } from '../store/languageStore';
 import type { Order } from '../types';
 import { money } from '../utils/format';
 
 export const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const t = useLanguageStore((state) => state.t);
   useEffect(() => { api<Order[]>('/orders').then(setOrders); }, []);
 
-  if (!orders.length) return <EmptyState title="No orders yet" description="Your completed demo checkouts will appear here." />;
+  if (!orders.length) return <EmptyState title={t('noOrders')} description={t('noOrdersDesc')} />;
 
   return (
     <motion.div {...pageTransition} className="space-y-4">
-      <h1 className="text-3xl font-black">Order history</h1>
+      <h1 className="text-3xl font-black">{t('orderHistory')}</h1>
       {orders.map((order) => (
         <div key={order.id} className="glass rounded-xl p-5">
           <div className="flex flex-wrap justify-between gap-3">

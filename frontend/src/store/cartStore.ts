@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import toast from 'react-hot-toast';
 import type { CartItem, Product } from '../types';
+import { translateNow } from './languageStore';
 
 type CartState = {
   items: CartItem[];
@@ -22,7 +23,7 @@ export const useCartStore = create<CartState>()(
           ? get().items.map((item) => (item.product_id === product.id ? { ...item, quantity: item.quantity + quantity } : item))
           : [...get().items, { product_id: product.id, quantity, products: product }];
         set({ items });
-        toast.success('Added to cart');
+        toast.success(translateNow('addedToCart'));
       },
       remove: (productId) => set({ items: get().items.filter((item) => item.product_id !== productId) }),
       update: (productId, quantity) =>
