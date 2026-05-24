@@ -1,0 +1,20 @@
+{
+  "name": "premium-marketplace",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Fullstack e-commerce marketplace with React, Express, TypeScript, Supabase, Tailwind, and Framer Motion.",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:backend dev:frontend",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
