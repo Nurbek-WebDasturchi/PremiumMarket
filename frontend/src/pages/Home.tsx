@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Sparkles, Truck } from 'lucide-react';
+import { ArrowRight, Clock3, ShieldCheck, Sparkles, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ProductCard } from '../components/ProductCard';
@@ -11,18 +11,31 @@ import type { Category, Product } from '../types';
 
 export const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [saleProducts, setSaleProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saleDeadline] = useState(() => Date.now() + 6 * 60 * 60 * 1000);
+  const [remaining, setRemaining] = useState(saleDeadline - Date.now());
   const t = useLanguageStore((state) => state.t);
 
   useEffect(() => {
-    Promise.all([api<Product[]>('/products/featured'), api<Category[]>('/categories')])
-      .then(([featured, cats]) => {
+    Promise.all([api<Product[]>('/products/featured'), api<Product[]>('/products?sale=true&limit=4'), api<Category[]>('/categories')])
+      .then(([featured, saleItems, cats]) => {
         setProducts(featured);
+        setSaleProducts(saleItems);
         setCategories(cats);
       })
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setRemaining(Math.max(saleDeadline - Date.now(), 0)), 1000);
+    return () => window.clearInterval(timer);
+  }, [saleDeadline]);
+
+  const hours = String(Math.floor(remaining / 3_600_000)).padStart(2, '0');
+  const minutes = String(Math.floor((remaining % 3_600_000) / 60_000)).padStart(2, '0');
+  const seconds = String(Math.floor((remaining % 60_000) / 1000)).padStart(2, '0');
 
   return (
     <motion.div {...pageTransition}>
@@ -71,6 +84,24 @@ export const Home = () => {
             </motion.div>
           ))}
         </motion.div>
+      </section>
+
+      <section className="mt-12">
+        <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-sm font-bold uppercase text-rose-500">{t('sale')}</p>
+            <h2 className="text-2xl font-black text-slate-950 dark:text-white">{t('saleProducts')}</h2>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{t('saleEndsSoon')}</p>
+          </div>
+          <div className="inline-flex items-center gap-2 self-start rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-sm font-black text-rose-500 md:self-auto">
+            <Clock3 className="h-4 w-4" />
+            {hours}:{minutes}:{seconds}
+          </div>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {loading ? Array.from({ length: 4 }).map((_, i) => <ProductSkeleton key={i} />) : saleProducts.map((product) => <ProductCard key={product.id} product={product} />)}
+        </div>
+        <Link to="/products?sale=true" className="mt-5 inline-flex text-sm font-bold text-brand-700 dark:text-brand-100">{t('viewAll')}</Link>
       </section>
 
       <section className="mt-12">

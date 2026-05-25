@@ -19,9 +19,10 @@ export const Products = () => {
   const search = params.get('search') ?? '';
   const category = params.get('category') ?? '';
   const sort = params.get('sort') ?? 'newest';
+  const sale = params.get('sale') ?? '';
   const t = useLanguageStore((state) => state.t);
 
-  const query = useMemo(() => new URLSearchParams({ search, category, sort, limit: '24' }).toString(), [search, category, sort]);
+  const query = useMemo(() => new URLSearchParams({ search, category, sort, sale, limit: '24' }).toString(), [search, category, sort, sale]);
 
   useEffect(() => {
     setLoading(true);
@@ -51,6 +52,7 @@ export const Products = () => {
         <div>
           <p className="text-sm font-bold uppercase text-brand-700 dark:text-brand-100">{t('marketplace')}</p>
           <h1 className="text-3xl font-black text-slate-950 dark:text-white">{t('products')}</h1>
+          {sale === 'true' && <p className="mt-1 text-sm font-semibold text-rose-500">{t('saleProducts')}</p>}
         </div>
         <div className="glass flex flex-wrap items-center gap-3 rounded-xl p-3">
           <SlidersHorizontal className="h-4 w-4 text-brand-600" />

@@ -32,6 +32,7 @@ productsRouter.get('/', async (req, res, next) => {
     const search = String(req.query.search ?? '').trim();
     const category = String(req.query.category ?? '').trim();
     const sort = String(req.query.sort ?? 'newest');
+    const sale = String(req.query.sale ?? '').trim() === 'true';
 
     const categoryJoin = category ? 'categories!inner(name, slug)' : 'categories(name, slug)';
 
@@ -41,6 +42,7 @@ productsRouter.get('/', async (req, res, next) => {
 
     if (search) query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%`);
     if (category) query = query.eq('categories.slug', category);
+    if (sale) query = query.not('old_price', 'is', null);
 
     if (sort === 'price_asc') query = query.order('price', { ascending: true });
     else if (sort === 'price_desc') query = query.order('price', { ascending: false });

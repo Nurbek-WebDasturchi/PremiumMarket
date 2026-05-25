@@ -27,6 +27,7 @@ export const Navbar = () => {
         <Link to="/" className="text-lg font-black tracking-tight text-slate-950 dark:text-white">Premium<span className="text-brand-600">Market</span></Link>
         <nav className="hidden items-center gap-5 text-sm font-semibold text-slate-600 dark:text-slate-300 md:flex">
           <NavLink to="/products">{t('navProducts')}</NavLink>
+          <NavLink to="/products?sale=true">{t('navSale')}</NavLink>
           <NavLink to="/orders">{t('navOrders')}</NavLink>
           {profile?.role === 'admin' && <NavLink to="/admin">{t('navAdmin')}</NavLink>}
         </nav>
