@@ -19,10 +19,36 @@ import { wishlistRouter } from './routes/wishlist.js';
 import { errorHandler, notFound } from './utils/errors.js';
 
 const app = express();
+const allowedOrigins = [
+  env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174'
+].filter(Boolean);
+
+const isAllowedCorsOrigin = (origin: string) => {
+  if (allowedOrigins.includes(origin)) return true;
+  if (origin.endsWith('.vercel.app')) return true;
+
+  try {
+    const url = new URL(origin);
+    return ['localhost', '127.0.0.1'].includes(url.hostname);
+  } catch {
+    return false;
+  }
+};
 
 app.use(helmet());
 app.use(compression());
-app.use(cors({ origin: env.CLIENT_URL, credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    const isAllowedOrigin = isAllowedCorsOrigin(origin);
+    return callback(isAllowedOrigin ? null : new Error(`CORS blocked origin: ${origin}`), isAllowedOrigin);
+  },
+  credentials: true
+}));
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300 }));

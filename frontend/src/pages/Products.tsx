@@ -15,6 +15,7 @@ export const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const search = params.get('search') ?? '';
   const category = params.get('category') ?? '';
   const sort = params.get('sort') ?? 'newest';
@@ -24,13 +25,19 @@ export const Products = () => {
 
   useEffect(() => {
     setLoading(true);
+    setError(null);
     Promise.all([api<Product[]>(`/products?${query}`), api<Category[]>('/categories')])
       .then(([items, cats]) => {
         setProducts(items);
         setCategories(cats);
       })
+      .catch((err) => {
+        console.error(err);
+        setProducts([]);
+        setError(t('productsLoadErrorDesc'));
+      })
       .finally(() => setLoading(false));
-  }, [query]);
+  }, [query, t]);
 
   const update = (key: string, value: string) => {
     const next = new URLSearchParams(params);
@@ -62,6 +69,8 @@ export const Products = () => {
       </div>
       {loading ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)}</div>
+      ) : error ? (
+        <EmptyState title={t('productsLoadError')} description={error} />
       ) : products.length ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{products.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       ) : (
