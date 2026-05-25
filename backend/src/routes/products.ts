@@ -33,9 +33,11 @@ productsRouter.get('/', async (req, res, next) => {
     const category = String(req.query.category ?? '').trim();
     const sort = String(req.query.sort ?? 'newest');
 
+    const categoryJoin = category ? 'categories!inner(name, slug)' : 'categories(name, slug)';
+
     let query = supabaseAdmin
       .from('products')
-      .select('*, categories(name, slug)', { count: 'exact' });
+      .select(`*, ${categoryJoin}`, { count: 'exact' });
 
     if (search) query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,brand.ilike.%${search}%`);
     if (category) query = query.eq('categories.slug', category);
